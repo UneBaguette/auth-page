@@ -18,6 +18,7 @@ form {
     min-width: 350px;
     max-width: 500px;
     padding: 15px 35px;
+    /* transform: translateY(-30%); */
 }
 
 h1 {
@@ -49,9 +50,9 @@ button {
     border-radius: 30px;
     outline: #090909 solid 2px;
     transition: all 130ms ease;
-    font-weight: 700;
+    font-weight: 500;
     max-width: 40%;
-    margin: 0 auto;
+    margin: 15px auto;
 }
 
 button:hover {

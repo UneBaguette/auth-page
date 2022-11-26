@@ -7,7 +7,6 @@ create table users (
 	type enum("user", "admin", "prisoner") DEFAULT "prisoner"
 );
 
-
 -- ADMIN USER
 INSERT INTO users(id, email, pass, type) VALUES (NULL,'admin@admin.fr','admin98',"admin");
 

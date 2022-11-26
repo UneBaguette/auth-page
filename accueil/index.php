@@ -1,23 +1,31 @@
+<?php
+
+require("../app/DB.php");
+
+$db = new DB("localhost", "auth_site", "root", "2341");
+
+$conn = $db->getPDOConnection();
+
+$q = $conn->query('SELECT * from users;', PDO::FETCH_OBJ);
+
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Principale</title>
-    <link rel="stylesheet" href="style/global.css">
+    <?php $title = "Site Principale";include('../base/head/head.php'); ?>
 </head>
 <body>
     <header>
         <nav>
             <ul>
                 <li>
-                    <a href="/auth/login.html">Se connecter</a>
+                    <a href="/auth/login.php">Se connecter</a>
                 </li>
                 <!-- No peasant allowed -->
-                <!-- <li>
-                    <a href="/auth/login.html">S'inscrire</a>
-                </li> -->
+                <li>
+                    <a href="/auth/register.php">S'inscrire</a>
+                </li>
             </ul>
         </nav>
     </header>
