@@ -28,7 +28,7 @@ class DB {
      * @param string $dbUser Le nom d'utilisateur de la base de donnée
      * @param string $dbPassword Le mot de passe de la base de donnée, ne pas inclure si aucun mot de passe
      */
-    public function __construct($dbHost, $dbName, $dbUser, $dbPassword = ""){
+    public function __construct($dbName, $dbHost = "localhost", $dbUser = "root", $dbPassword = "2341"){
         $this->dbHost = $dbHost;
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;
@@ -44,4 +44,6 @@ class DB {
         }
         return $this->pdo = new PDO('mysql:host='. $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
     }
+
+
 }

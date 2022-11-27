@@ -1,13 +1,8 @@
 <?php
 
-require("../app/DB.php");
-
-$db = new DB("localhost", "auth_site", "root", "2341");
-
-$conn = $db->getPDOConnection();
-
-$q = $conn->query('SELECT * from users;', PDO::FETCH_OBJ);
-
+if (isset($_COOKIE['auth'])){
+    header("Location: user.php");
+}
 
 ?>
 <!DOCTYPE html>
@@ -23,9 +18,9 @@ $q = $conn->query('SELECT * from users;', PDO::FETCH_OBJ);
                     <a href="/auth/login.php">Se connecter</a>
                 </li>
                 <!-- No peasant allowed -->
-                <li>
+                <!-- <li>
                     <a href="/auth/register.php">S'inscrire</a>
-                </li>
+                </li> -->
             </ul>
         </nav>
     </header>

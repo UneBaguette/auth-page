@@ -11,6 +11,6 @@ class Form {
      * @return string Contient le label et l'input généré avec les données entrées
      */
     public function input($name, $inputName, $type = "text"){
-        return '<label for="'. $inputName .'">'. $name .'</label><input type="'. $type .'" name="'. $inputName .'">';
+        return '<label for="'. $inputName .'">'. $name .'</label><input required="required" type="'. $type .'" name="'. $inputName .'">';
     }
 }

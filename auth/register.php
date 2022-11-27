@@ -1,4 +1,4 @@
-<?php include ("../app/Form.php"); $form = new Form(); ?>
+<?php if (!isset($_COOKIE['auth'])) {http_response_code(403); die("You should not have access to this page!");} include ("../app/Form.php"); $form = new Form(); ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
