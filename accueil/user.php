@@ -1,7 +1,7 @@
-<?php 
+<?php
 
 if(!isset($_COOKIE['auth'])) { 
-    http_response_code(403); 
+    http_response_code(403);
     die("You don't have the right to view this page !");
 }
 
