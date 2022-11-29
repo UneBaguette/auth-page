@@ -1,4 +1,37 @@
-<?php if (!isset($_COOKIE['auth'])) {http_response_code(403); die("You should not have access to this page!");} include ("../app/Form.php"); $form = new Form(); ?>
+<?php 
+
+require ("../app/Form.php"); 
+$form = new Form();
+
+// if (!isset($_COOKIE['auth'])) {
+//     http_response_code(403); 
+//     die("You should not have access to this page!");
+// } 
+
+if (isset($_POST["mail"]) && isset($_POST["pass"]) && isset($_POST["passverif"])){
+    $email = $_POST["mail"];
+    $pass = $_POST["pass"];
+    $passverif = $_POST["passverif"];
+    require ("../app/DB.php");
+    try {
+        if ($pass === $passverif) {
+            $db = new DB("auth_site");
+            $hashpwd = password_hash($pass, PASSWORD_BCRYPT);
+            if ($db->register($email, $hashpwd)){
+                $sucess = true;
+            } else {
+                $error = true;
+            }
+        } else {
+            $error = true;
+        }
+    }
+    catch (PDOException $e){
+        echo $e->getMessage();
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,9 +44,16 @@
         
         echo $form->input("Email", "mail", "email");
         echo $form->input("Mot de passe", "pass", "password");
+        echo $form->input("Confirmation du mot de passe", "passverif", "password");
         
         ?>
         <button type="submit">S'inscrire</button>
+        <?php
+
+        if (!empty($sucess)) echo "<p class='sucess'><span>Succès</span></p>";
+        if (!empty($error)) echo "<p class='error'><span>Mauvais identifiant !</span></p>";
+
+        ?>
     </form>
 </body>
 </html>
