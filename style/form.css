@@ -37,8 +37,20 @@ label {
 }
 
 input {
+    border: 2px solid #0909092a;
+    background: transparent;
+    box-shadow: inset 2px 4px 7px #00000009;
     margin-bottom: 20px;
-    padding: 5px;
+    padding: 5px 8px;
+    transition: all 130ms ease;
+    outline: 0;
+    border-radius: 2px;
+}
+
+input:focus-within{
+    /* outline: 2px solid #09F7; */
+    border: 2px solid #09f7;
+
 }
 
 button {
@@ -66,7 +78,7 @@ button:active {
     color: #f5f5f5;
 }
 
-.error {
+.sucess, .error {
     display: flex;
     position: absolute;
     top: -70px;
@@ -80,11 +92,11 @@ button:active {
     border-radius: 3px;
 }
 
-.error span {
+.sucess span, .error span {
     padding: 5px 10px 5px 5px;
 }
 
-.error::before {
+.sucess::before, .error::before {
     content: "\26A0";
     width: 35px;
     font-size: 1.6rem;
@@ -92,4 +104,13 @@ button:active {
     justify-content: center;
     align-items: center;
     padding: 5px 5px;
+}
+
+.sucess {
+    background: #26fa38c7;
+    border: 1.2px solid #008500;
+}
+
+.sucess::before{
+    content: "\2713";
 }
