@@ -1,8 +1,6 @@
 <?php
 
 class Form {
-    public function __construct(){
-    }
     /**
      * Donne un input avec un label
      * @param string $name Titre du label

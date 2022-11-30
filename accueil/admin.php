@@ -1,9 +1,9 @@
 <?php 
+session_start();
 
 
-
-if(!isset($_COOKIE['auth'])){ 
-    http_response_code(403); 
+if(!isset($_SESSION['auth']) && !isset($_SESSION['type']) !== 'admin'){ 
+    http_response_code(403);
     die("You don't have the right to view this page !");
 }
 
@@ -30,6 +30,7 @@ $users = $db->getRegisteredUsers();
         </nav>
     </header>
     <h1>
+        <input aria-haspopup="dialog" type="text">
         SALUT PATRON
     </h1>
 

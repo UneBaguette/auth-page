@@ -28,7 +28,7 @@ class DB {
      * @param string $dbUser Le nom d'utilisateur de la base de donnée
      * @param string $dbPassword Le mot de passe de la base de donnée, ne pas inclure si aucun mot de passe
      */
-    public function __construct($dbName, $dbHost = "localhost", $dbUser = "root", $dbPassword = ""){
+    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = ""){
         $this->dbHost = $dbHost;
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;
@@ -59,20 +59,41 @@ class DB {
     }
 
     public function login($email, $pass){
-        $res = $this->query("SELECT email, pass, type FROM users;");
+        $res = $this->query("SELECT id, email, pass, type FROM users;");
         foreach ($res as $v){
             if ($v["email"] === $email){
                 if (password_verify($pass, $v['pass'])){
-                    // if ($v['type'] === "admin"){
-                    //     header("../accueil/admin.php");
-                    // } elseif ($v['type'] === "user") {
-                    //     header("../accueil/user.php");
-                    // }
                     return true;
                 }
             }
         }
+        return false;
     }
+
+    public function prepare($statement, Array $options = []){
+        $res = $this->getPDOConnection()->prepare($statement);
+        $res = $res->execute($options);
+        return $res;
+    }
+
+    public function fetch($id = 0){
+        $sql = 'SELECT * FROM users';
+        $options = [];
+	    if ($id !== 0) {
+	      $sql .= ' WHERE id = :id;';
+          $options = ['id' => $id];
+	    }
+	    $res = $this->getPDOConnection()->prepare($sql);
+	    $res->execute($options);
+	    $datas = $res->fetchAll();
+	    return $datas;
+    }
+
+    public function storeUser($email){
+        $newid = session_create_id('auth-');
+        $_SESSION['deleted_time'] = time();
+    }
+
     public function register($email, $pass, $type = "user"){
         $st = $this->query("SELECT email FROM users;");
         foreach($st as $v){
