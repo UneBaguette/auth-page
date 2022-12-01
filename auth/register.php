@@ -1,4 +1,15 @@
-<?php 
+<?php
+session_start();
+$type = ($_SESSION['type'] ?? "");
+
+if (!isset($_SESSION['auth']) && !isset($_SESSION['type'])){
+    http_response_code(403);
+    die("You don't have the right to view this page!");
+}
+if ($type !== 'admin'){
+    http_response_code(403);
+    die("You don't have the right to view this page!");
+}
 
 require ("../app/Form.php"); 
 $form = new Form();

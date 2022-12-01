@@ -1,13 +1,16 @@
 <?php
+session_start();
 
-if (isset($_COOKIE)) {
-    print_r($_COOKIE);
-    if (isset($_COOKIE['auth'])){
-        print_r($_COOKIE['auth']);
-    }
-} else {
-    echo "nothing";
+$type = ($_SESSION['type'] ?? "");
+
+if (!isset($_SESSION['auth']) && !isset($_SESSION['type'])){
+    http_response_code(403);
+    die("You don't have the right to view this page!");
 }
+if ($type === 'admin'){
+    header("Location: admin");
+}
+
 
 
 //echo $_COOKIE['auth'] ?? "";
@@ -30,7 +33,7 @@ if (isset($_COOKIE)) {
         <nav>
             <ul>
                 <li>
-                    <a href="index.php">Se déconnecter</a>
+                    <a href="../auth/logout">Se déconnecter</a>
                 </li>
             </ul>
         </nav>

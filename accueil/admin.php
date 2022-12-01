@@ -1,10 +1,13 @@
 <?php 
 session_start();
+$type = ($_SESSION['type'] ?? "");
 
-
-if(!isset($_SESSION['auth']) && !isset($_SESSION['type']) !== 'admin'){ 
+if(!isset($_SESSION['auth']) && !isset($_SESSION['type'])){ 
     http_response_code(403);
-    die("You don't have the right to view this page !");
+    die("You don't have the right to view this page!");
+}
+if ($type === 'user'){
+    header("Location: user");
 }
 
 require ("../app/DB.php");
@@ -24,13 +27,12 @@ $users = $db->getRegisteredUsers();
         <nav>
             <ul>
                 <li>
-                    <a href="index.php">Se déconnecter</a>
+                    <a href="../auth/logout">Se déconnecter</a>
                 </li>
             </ul>
         </nav>
     </header>
     <h1>
-        <input aria-haspopup="dialog" type="text">
         SALUT PATRON
     </h1>
 

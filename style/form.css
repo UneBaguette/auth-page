@@ -47,9 +47,13 @@ input {
     border-radius: 2px;
 }
 
+input:hover{
+    border: 2px solid #78787880;
+}
+
 input:focus-within{
     /* outline: 2px solid #09F7; */
-    border: 2px solid #09f7;
+    border: 2px solid #0099ff9c;
 
 }
 
@@ -69,7 +73,7 @@ button {
 }
 
 button:hover {
-    background: #f5f5f5;
+    background: #fcfcfc;
     color: #080808;
 }
 

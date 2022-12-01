@@ -1,8 +1,11 @@
 <?php
+session_start();
 
-if (isset($_COOKIE['auth'])){
-    header("Location: user.php");
-}
+require("../app/DB.php");
+
+$db = new DB();
+
+$db->isLoggedIn();
 
 ?>
 <!DOCTYPE html>
@@ -28,7 +31,7 @@ if (isset($_COOKIE['auth'])){
         Bienvenue paysan.
     </h1>
     <div class="video-container">
-        <video autoplay width="500" loop >
+        <video autoplay width="500" muted loop >
             <source src="https://thumbs.gfycat.com/CalmEnlightenedAuklet-mobile.mp4" type="video/mp4"/>
         </video>
     </div>

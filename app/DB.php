@@ -28,7 +28,7 @@ class DB {
      * @param string $dbUser Le nom d'utilisateur de la base de donnée
      * @param string $dbPassword Le mot de passe de la base de donnée, ne pas inclure si aucun mot de passe
      */
-    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = ""){
+    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = "2341"){
         $this->dbHost = $dbHost;
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;
@@ -40,10 +40,11 @@ class DB {
      */
     public function getPDOConnection(){
         if ($this->pdo != null){
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this->pdo;
         }
-        return $this->pdo = new PDO('mysql:host='. $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
+        $this->pdo = new PDO('mysql:host='. $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $this->pdo;
     }
 
 
@@ -58,6 +59,22 @@ class DB {
         return $res;
     }
 
+
+    public function getTypeOfUser($email, $pass){
+        $datas = $this->prepare("SELECT id, email, pass, type FROM users WHERE email = :email;", ["email" => $email]);
+        foreach($datas as $v){
+            if (password_verify($pass, $v['pass'])){
+                return $v['type'];
+            }
+        }
+        return false;
+    }
+
+    public function getTypeOfUserByAuth($auth){
+        $datas = $this->prepare("SELECT id, email, pass, type FROM users WHERE email = :email;");
+        return false;
+    }
+
     public function login($email, $pass){
         $res = $this->query("SELECT id, email, pass, type FROM users;");
         foreach ($res as $v){
@@ -70,12 +87,13 @@ class DB {
 
     public function prepare($statement, Array $options = []){
         $res = $this->getPDOConnection()->prepare($statement);
-        $res = $res->execute($options);
-        return $res;
+        $res->execute($options);
+        $datas = $res->fetchAll();
+        return $datas;
     }
 
     public function fetch($id = 0){
-        $sql = 'SELECT * FROM users';
+        $sql = 'SELECT id, email, pass, type FROM users';
         $options = [];
 	    if ($id !== 0) {
 	      $sql .= ' WHERE id = :id;';
@@ -83,8 +101,16 @@ class DB {
 	    }
 	    $res = $this->getPDOConnection()->prepare($sql);
 	    $res->execute($options);
-	    $datas = $res->fetchAll();
+	    $datas = $res->fetchAll(PDO::FETCH_ASSOC);
 	    return $datas;
+    }
+
+    public function delete($id = 0){
+        $sql = 'DELETE FROM users WHERE id = :id';
+        $options = ['id' => $id];
+	    $res = $this->getPDOConnection()->prepare($sql);
+	    $res->execute($options);
+	    return true;
     }
 
     public function storeUser($email){
@@ -103,4 +129,13 @@ class DB {
         $st->execute(['email' => $email, 'pass' => $pass, 'type' => $type]);
         return true;
     }
+    public function isLoggedIn() {
+        if (isset($_SESSION['auth'])){
+            header("Location: " . $_SESSION['type']);
+        }
+	}
+
+    public function message($msg, $status) {
+	    return json_encode(['message' => $msg, 'error' => $status]);
+	}
 }
