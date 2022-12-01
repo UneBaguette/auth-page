@@ -61,10 +61,8 @@ class DB {
     public function login($email, $pass){
         $res = $this->query("SELECT id, email, pass, type FROM users;");
         foreach ($res as $v){
-            if ($v["email"] === $email){
-                if (password_verify($pass, $v['pass'])){
-                    return true;
-                }
+            if ($v["email"] === $email && password_verify($pass, $v['pass'])){
+                return true;
             }
         }
         return false;

@@ -3,11 +3,6 @@
 require ("../app/Form.php"); 
 $form = new Form();
 
-// if (!isset($_COOKIE['auth'])) {
-//     http_response_code(403); 
-//     die("You should not have access to this page!");
-// } 
-
 if (isset($_POST["mail"]) && isset($_POST["pass"]) && isset($_POST["passverif"])){
     $email = $_POST["mail"];
     $pass = $_POST["pass"];
