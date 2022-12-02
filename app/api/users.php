@@ -33,7 +33,7 @@ if ($api === 'POST') {
             if ($pass === $passverif) {
                 $hashpwd = password_hash($pass, PASSWORD_BCRYPT);
                 if ($db->register($email, $hashpwd)){
-                    echo $db->message('User added successfully!',false);
+                    echo $db->message('User added successfully!',false, true);
                 } else {
                     echo $db->message('Failed to add an user!',true);
                 }

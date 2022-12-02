@@ -99,7 +99,7 @@ class DB {
     }
 
     public function fetch($id = 0){
-        $sql = 'SELECT id, email, pass, type FROM users';
+        $sql = 'SELECT id, email, type FROM users';
         $options = [];
 	    if ($id !== 0) {
 	      $sql .= ' WHERE id = :id;';
@@ -165,4 +165,8 @@ class DB {
     public function message($msg, $error, $success = false) {
 	    return json_encode(['message' => $msg, 'error' => $error, 'success' => $success]);
 	}
+
+    public function cleanInput($input){
+        return $input = $this->getPDOConnection()->quote($input);
+    }
 }
