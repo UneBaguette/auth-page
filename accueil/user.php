@@ -11,17 +11,6 @@ if ($type === 'admin'){
     header("Location: admin");
 }
 
-
-
-//echo $_COOKIE['auth'] ?? "";
-
-// if(!isset($_COOKIE['auth'])) { 
-//     http_response_code(403);
-//     die("You don't have the right to view this page !");
-// }
-
-// session_write_close();
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -29,15 +18,7 @@ if ($type === 'admin'){
     <?php $title = "Panneau utilisateur"; include('../base/head/head.php'); ?>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li>
-                    <a href="../auth/logout">Se déconnecter</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <?php include("../base/body/header.php"); ?>
     <h1>
         SALUT TOI!
     </h1>

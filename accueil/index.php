@@ -1,32 +1,10 @@
-<?php
-session_start();
-
-require("../app/DB.php");
-
-$db = new DB();
-
-$db->isLoggedIn();
-
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <?php $title = "Site Principale";include('../base/head/head.php'); ?>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li>
-                    <a href="/auth/login.php">Se connecter</a>
-                </li>
-                <!-- No peasant allowed -->
-                <!-- <li>
-                    <a href="/auth/register.php">S'inscrire</a>
-                </li> -->
-            </ul>
-        </nav>
-    </header>
+    <?php include("../base/body/header.php"); ?>
     <h1>
         Bienvenue paysan.
     </h1>

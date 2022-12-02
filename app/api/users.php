@@ -17,10 +17,14 @@ if ($api === 'GET'){
     } else {
         $datas = $db->fetch();
     }
+    if ($datas === array()){
+        echo $db->message("Could not found user(s)!", true);
+        exit(1);
+    }
     echo json_encode($datas);
 }
 
-if ($api == 'POST') {
+if ($api === 'POST') {
     if (isset($_POST["mail"]) && isset($_POST["pass"]) && isset($_POST["passverif"])) {
         $email = $_POST["mail"];
         $pass = $_POST["pass"];
@@ -45,7 +49,7 @@ if ($api == 'POST') {
     }
 }
 
-if ($api == 'DELETE') {
+if ($api === 'DELETE') {
     if ($id != null) {
         if ($db->delete($id)) {
             echo $db->message('User deleted successfully!', false);

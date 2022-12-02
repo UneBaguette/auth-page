@@ -11,7 +11,7 @@ if ($type === 'user'){
 }
 
 require ("../app/DB.php");
-$db = new DB("auth_site");
+$db = new DB();
 
 $users = $db->getRegisteredUsers();
 
@@ -23,20 +23,12 @@ $users = $db->getRegisteredUsers();
     <?php $title = "Panneau administrateur";include('../base/head/head.php'); ?>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li>
-                    <a href="../auth/logout">Se déconnecter</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <?php include("../base/body/header.php"); ?>
     <h1>
         SALUT PATRON
     </h1>
 
-    <table>
+    <table border="1">
         <thead>
             <tr><th>Email</th><th>Type</th></tr>
         </thead>

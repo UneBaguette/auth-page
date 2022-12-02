@@ -28,7 +28,7 @@ class DB {
      * @param string $dbUser Le nom d'utilisateur de la base de donnée
      * @param string $dbPassword Le mot de passe de la base de donnée, ne pas inclure si aucun mot de passe
      */
-    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = "2341"){
+    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = ""){
         $this->dbHost = $dbHost;
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;
@@ -36,15 +36,21 @@ class DB {
     }
     /**
      * Récupérer la connection PDO
-     * @return PDO L'instance de l'objet de la base de donnée PDO
+     * @return PDO|void L'instance de l'objet de la base de donnée PDO
      */
     public function getPDOConnection(){
-        if ($this->pdo != null){
+        try {
+            if ($this->pdo != null){
+                return $this->pdo;
+            }
+            $this->pdo = new PDO('mysql:host='. $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this->pdo;
         }
-        $this->pdo = new PDO('mysql:host='. $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $this->pdo;
+        catch (PDOException $e) {
+            echo $e->getMessage();
+            return exit();
+        }
     }
 
 
@@ -106,11 +112,37 @@ class DB {
     }
 
     public function delete($id = 0){
+        if ($this->checkId($id)){
+            return false;
+        }
         $sql = 'DELETE FROM users WHERE id = :id';
         $options = ['id' => $id];
 	    $res = $this->getPDOConnection()->prepare($sql);
 	    $res->execute($options);
 	    return true;
+    }
+
+    public function checkId($id){
+        $st = $this->query("SELECT id FROM users;");
+        foreach($st as $v){
+            if ($v['id'] === $id){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function checkMail($email){
+        if (!preg_match('/^[^0-9][_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{1,4})$/', $email)){
+            return false;
+        }
+        $st = $this->query("SELECT email FROM users;");
+        foreach($st as $v){
+            if ($v['email'] === $email){
+                return false;
+            }
+        }
+        return true;
     }
 
     public function storeUser($email){
@@ -119,23 +151,18 @@ class DB {
     }
 
     public function register($email, $pass, $type = "user"){
-        $st = $this->query("SELECT email FROM users;");
-        foreach($st as $v){
-            if ($v['email'] === $email){
-                return false;
-            }
+        if (!$this->checkMail($email)){
+            return false;
         }
         $st = $this->getPDOConnection()->prepare("INSERT INTO users(id, email, pass, type) VALUES (NULL, :email, :pass, :type)");
         $st->execute(['email' => $email, 'pass' => $pass, 'type' => $type]);
         return true;
     }
     public function isLoggedIn() {
-        if (isset($_SESSION['auth'])){
-            header("Location: " . $_SESSION['type']);
-        }
+        return isset($_SESSION['auth']) && isset($_SESSION['type']) === true;
 	}
 
-    public function message($msg, $status) {
-	    return json_encode(['message' => $msg, 'error' => $status]);
+    public function message($msg, $error, $success = false) {
+	    return json_encode(['message' => $msg, 'error' => $error, 'success' => $success]);
 	}
 }
