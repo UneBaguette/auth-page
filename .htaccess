@@ -1,3 +1,7 @@
+Options +MultiViews
 RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^\.]+)$ $1.html [NC,L]
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+ErrorDocument 403 https://auth.fr/
+ErrorDocument 404 https://auth.fr/
