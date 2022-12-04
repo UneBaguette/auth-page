@@ -96,6 +96,7 @@ a {
 .admin-table {
     min-width: 80%;
     margin: 20px auto;
+    background: #b98383;
 }
 
 .admin-table td, .admin-table th {
@@ -110,11 +111,11 @@ a {
 }
 
 .admin-table td[class^="table"]:hover{
-    background-color: #d7d7d751;
+    background-color: #1c1c1c51;
 }
 
 .admin-table td[class^="table"]:active{
-    background-color: #d7d7d7af;
+    background-color: #131313af;
 }
 
 /* Disconnet */

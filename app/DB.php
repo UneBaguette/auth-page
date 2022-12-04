@@ -65,13 +65,31 @@ class DB {
         return $res;
     }
 
-
+    /**
+     * Donne le type d'un utilisateur avec son email et son mot de passe
+     * @param string $email L'email de l'utilisateur
+     * @param string $pass Le mot de passe de l'uilisateur
+     * @return string|bool Le type de l'utilisateur ou false si l'utilisateur n'a pas entré le bon mot de passe
+     */
     public function getTypeOfUser($email, $pass){
-        $datas = $this->prepare("SELECT id, email, pass, type FROM users WHERE email = :email;", ["email" => $email]);
+        $datas = $this->prepare("SELECT pass, type FROM users WHERE email = :email;", ["email" => $email]);
         foreach($datas as $v){
             if (password_verify($pass, $v['pass'])){
                 return $v['type'];
             }
+        }
+        return false;
+    }
+    /**
+     * Get the type of user by the id
+     * @param string $email L'email de l'utilisateur
+     * @param string $pass Le mot de passe de l'uilisateur
+     * @return string|bool Le type de l'utilisateur ou false si l'utilisateur n'existe pas
+     */
+    public function getTypeOfUserById($id){
+        $datas = $this->prepare("SELECT type FROM users WHERE id = :id;", ["id" => $id]);
+        foreach($datas as $v){
+            return $v['type'];
         }
         return false;
     }
@@ -130,13 +148,14 @@ class DB {
     }
 
     public function delete($id = 0){
-        if ($this->checkId($id)){
+        if ($this->getTypeOfUserById($id) === 'admin' || $this->checkId($id)){
             return false;
         }
         $sql = 'DELETE FROM users WHERE id = :id';
         $options = ['id' => $id];
 	    $res = $this->getPDOConnection()->prepare($sql);
 	    $res->execute($options);
+        $this->query('ALTER TABLE users AUTO_INCREMENT = 1');
 	    return true;
     }
     /**
@@ -165,8 +184,8 @@ class DB {
         }
         return false;
     }
-    public function onExpired(){
-        $expires = 600;
+    public static function onExpired(){
+        $expires = 600; # 10 minutes
         if (!isset($_SESSION['auth']) || time() - $_SESSION['created'] > $expires){
             if (session_destroy()){
                 if (!str_contains($_SERVER['PHP_SELF'], "accueil/index")){
@@ -202,7 +221,7 @@ class DB {
         $st->execute(['email' => $email, 'pass' => $pass, 'type' => $type]);
         return true;
     }
-    public function isLoggedIn() {
+    public static function isLoggedIn() {
         return isset($_SESSION['auth']) && isset($_SESSION['type']) === true;
 	}
 

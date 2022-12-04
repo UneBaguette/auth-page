@@ -18,7 +18,6 @@ $db = new DB();
 
 $users = $db->getRegisteredUsers();
 
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -38,23 +37,49 @@ $users = $db->getRegisteredUsers();
         <tbody>
             <?php foreach($users as $v): ?>
                 <tr>
-                    <?php echo "<td>". $v["id"] ."</td><td>". $v["email"] ."</td><td>". $v["type"] ."</td><td class='table-modify'>🖋️</td><td class='table-delete'>🗑️</td>" ?>
+                    <?php echo "<td>" . $v["id"] . "</td><td>" . $v["email"] . "</td><td>" . $v["type"] . "</td><td class='table-modify'>🖋️</td>";
+                    
+                    if ($v['type'] === 'admin') {
+                        echo "<td style='text-align: center;' >ADMIN</td>";
+                    } else {
+                        echo "<td class='table-delete' data-id='" . $v["id"] . "'>🗑️</td>";
+                    }; 
+                    
+                    ?>
                 </tr>
 
             <?php endforeach; ?>
         </tbody>
     </table>
-
     <script>
-
             const trashs = document.querySelectorAll('.table-delete');
 
-
-            trashs.forEach((trash) => {
-                trash.addEventListener('click', () => {
-
+            trashs.forEach((trash, i) => {
+                trash.addEventListener('dblclick', () => {
+                    deleteById(trash.getAttribute("data-id"));
                 })
             })
+
+            async function deleteById(id){
+                const res = await fetch("/app/api/users?id=" + id, {
+                    method: 'DELETE'
+                }).catch((e) => {
+                    console.error(e);
+                });
+
+                const datas = await res.json();
+
+                return datas['success'] = true ? deleteRow(id) : false;
+            }
+
+            function deleteRow(id){
+                trashs.forEach((trash) => {
+                    const parentElement = trash.parentNode;
+                    if (trash.getAttribute('data-id') === id){
+                        parentElement.remove();
+                    }
+                })
+            }
 
 
 

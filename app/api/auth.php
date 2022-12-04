@@ -6,7 +6,7 @@ header("Content-Type: application/json;");
 
 # test
 
-include_once("../DB.php");
+require_once("../DB.php");
 
 $db = new DB();
 

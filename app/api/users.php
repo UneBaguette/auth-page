@@ -4,7 +4,7 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: X-Requested-With');
 header("Content-Type: application/json");
 
-include_once("../DB.php");
+require_once("../DB.php");
 
 $db = new DB();
 
@@ -73,7 +73,7 @@ if ($api === 'PUT') {
 if ($api === 'DELETE') {
     if ($id != null) {
         if ($db->delete($id)) {
-            echo $db->message('User deleted successfully!', false);
+            echo $db->message('User deleted successfully!', false, true);
         } else {
             echo $db->message('Failed to delete the user!', true);
         }

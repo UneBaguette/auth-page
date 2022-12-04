@@ -1,15 +1,13 @@
 <?php
-session_start();
-
 if (isset($_POST['mail']) && isset($_POST['pass'])) {
     $mail = $_POST['mail'];
     $pass = $_POST['pass'];
     require ("../DB.php");
     require("../App.php");
     try {
+        session_start();
         $db = new DB();
         if ($db->login($mail, $pass)){
-            $lifetime = 20;
             $type = $db->getTypeOfUser($mail, $pass);
             $s_name = session_name();
             $id = uniqid();

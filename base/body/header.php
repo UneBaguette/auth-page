@@ -7,9 +7,7 @@ $root = dirname(dirname(__DIR__));
 
 require_once($root . "/app/DB.php");
 
-$db = new DB();
-
-$db->onExpired();
+DB::onExpired();
 
 ?>
 <header>
@@ -25,7 +23,7 @@ $db->onExpired();
                 ?>
             </li>
             <?php 
-            if ($db->isLoggedIn()){
+            if (DB::isLoggedIn()){
                 if ($_SESSION['type'] === 'admin'){
                     if (!str_contains($_SERVER['PHP_SELF'], "accueil/admin")){
                         echo "<li>
