@@ -11,7 +11,7 @@ if (isset($_POST['mail']) && isset($_POST['pass'])) {
             $type = $db->getTypeOfUser($mail, $pass);
             $s_name = session_name();
             $id = uniqid();
-            setcookie($s_name, '', time() + $lifetime);
+            setcookie($s_name, '', time() + 600);
             $_SESSION['type'] = $type;
             $_SESSION['auth'] = $id;
             $_SESSION['created'] = time();

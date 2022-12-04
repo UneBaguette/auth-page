@@ -35,10 +35,6 @@ DB::onExpired();
                                 <a href='/accueil/user'>Page d'utilisateur</a>
                             </li>";
                     }
-                    echo "
-                        <li class='disconnect'>
-                            <a href='/auth/logout'>Se déconnecter</a>
-                        </li>";
 
                 } elseif ($_SESSION['type'] === 'user'){
                     if (!str_contains($_SERVER['PHP_SELF'], "accueil/user")){
@@ -46,15 +42,10 @@ DB::onExpired();
                                 <a href='/accueil/user'>Page d'utilisateur</a>
                             </li>";
                     }
-                    echo "
-                        <li class='disconnect'>
-                            <a href='/auth/logout'>Se déconnecter</a>
-                        </li>";
-                } else {
-                    echo "<li class='disconnect'>
-                            <a href='/auth/logout'>Se déconnecter</a>
-                        </li>";
                 }
+                echo "<li class='disconnect'>
+                            <a href='/auth/logout'>Se déconnecter</a>
+                        </li>";
             } else
                 echo "<li><a href='/auth/login.php'>Se connecter</a></li>";
             

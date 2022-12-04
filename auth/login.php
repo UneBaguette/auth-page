@@ -29,17 +29,6 @@ $form = new Form();
         echo $form->input("Mot de passe", "pass", "password");
         ?>
         <button class="submit" type="submit">Se connecter</button>
-        <?php if (!empty($sucess)) echo "<p class='sucess'><span>Succès</span></p>";?>
-        <?php if (!empty($error)) echo "<p class='error'><span>Mauvais identifiant !</span></p>";?>
     </form>
-    <script>
-
-        const form = document.querySelector('form');
-
-        form.addEventListener("submit", (e) => {
-
-        });
-
-    </script>
 </body>
 </html>
