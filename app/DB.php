@@ -28,7 +28,7 @@ class DB {
      * @param string $dbUser Le nom d'utilisateur de la base de donnée
      * @param string $dbPassword Le mot de passe de la base de donnée, ne pas inclure si aucun mot de passe
      */
-    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = ""){
+    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = "2341"){
         $this->dbHost = $dbHost;
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;
@@ -61,7 +61,7 @@ class DB {
     }
 
     public function getRegisteredUsers(){
-        $res = $this->query("SELECT email, type FROM users;");
+        $res = $this->query("SELECT id, email, type FROM users;");
         return $res;
     }
 
@@ -75,10 +75,12 @@ class DB {
         }
         return false;
     }
-
-    public function getTypeOfUserByAuth($auth){
-        $datas = $this->prepare("SELECT id, email, pass, type FROM users WHERE email = :email;");
-        return false;
+    /**
+     * Get the type of the user that is connected
+     * @return bool|string
+     */
+    public function getTypeOfUserByAuth(){
+        return $_SESSION['type'] ? isset($_SESSION['type']) : false;
     }
 
     public function login($email, $pass){
@@ -94,7 +96,7 @@ class DB {
     public function prepare($statement, Array $options = []){
         $res = $this->getPDOConnection()->prepare($statement);
         $res->execute($options);
-        $datas = $res->fetchAll();
+        $datas = $res->fetchAll(PDO::FETCH_ASSOC);
         return $datas;
     }
 
@@ -110,6 +112,22 @@ class DB {
 	    $datas = $res->fetchAll(PDO::FETCH_ASSOC);
 	    return $datas;
     }
+    /**
+     * Met à jour l'email et le type de l'id donné
+     * @param string|int $id Va dire ce qui sera modifié
+     * @param string $email La nouvelle valeur de l'email
+     * @param string $type La nouvelle valeur du type
+     * @return bool Retourne true si l'opération à réussi
+     */
+    public function update($id, $email, $type){
+        if (!$this->checkType($type) || !$this->isMail($email)){
+            return false;
+        }
+        $sql = 'UPDATE users SET email = :email, type = :type WHERE id = :id';
+	    $res = $this->getPDOConnection()->prepare($sql);
+	    $res->execute(["email" => $email, "type" => $type, "id" => $id]);
+	    return true;
+    }
 
     public function delete($id = 0){
         if ($this->checkId($id)){
@@ -121,7 +139,11 @@ class DB {
 	    $res->execute($options);
 	    return true;
     }
-
+    /**
+     * Vérifie si l'id donné est existant dans la table users
+     * @param string|int $id La valeur qui sera vérifié
+     * @return bool Retourne true si l'id donné est existant, false si l'id n'est pas existant
+     */
     public function checkId($id){
         $st = $this->query("SELECT id FROM users;");
         foreach($st as $v){
@@ -132,8 +154,35 @@ class DB {
         return true;
     }
 
-    public function checkMail($email){
+    public function checkType($type){
+        $types = ['admin', 'user', 'prisoner'];
+        foreach($types as $v){
+            if ($v === stripslashes(substr($type, 1, -1))){
+                return true;
+            } elseif($v === $type){
+                return true;
+            }
+        }
+        return false;
+    }
+    public function onExpired(){
+        $expires = 600;
+        if (!isset($_SESSION['auth']) || time() - $_SESSION['created'] > $expires){
+            if (session_destroy()){
+                if (!str_contains($_SERVER['PHP_SELF'], "accueil/index")){
+                    header("Location: ../auth/login");
+                }
+            }
+        }
+    }
+    public function isMail($email){
         if (!preg_match('/^[^0-9][_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{1,4})$/', $email)){
+            return false;
+        }
+        return true;
+    }
+    public function checkMail($email){
+        if (!$this->isMail($email)){
             return false;
         }
         $st = $this->query("SELECT email FROM users;");
@@ -143,11 +192,6 @@ class DB {
             }
         }
         return true;
-    }
-
-    public function storeUser($email){
-        $newid = session_create_id('auth-');
-        $_SESSION['deleted_time'] = time();
     }
 
     public function register($email, $pass, $type = "user"){
@@ -167,6 +211,10 @@ class DB {
 	}
 
     public function cleanInput($input){
-        return $input = $this->getPDOConnection()->quote($input);
+        $input = strip_tags($input);
+	    $input = htmlspecialchars($input);
+	    $input = stripslashes($input);
+	    $input = trim($input);
+	    return $input;
     }
 }

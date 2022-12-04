@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <?php $title = "Site Principale";include('../base/head/head.php'); ?>
+    <?php $base = "../base/"; $title = "Site Principale";include($base . 'head/head.php'); ?>
 </head>
 <body>
-    <?php include("../base/body/header.php"); ?>
+    <?php include($base . "body/header.php"); ?>
     <h1>
         Bienvenue paysan.
     </h1>

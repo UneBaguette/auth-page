@@ -1,10 +1,14 @@
 <?php
 session_start();
 $type = ($_SESSION['type'] ?? "");
-if ($type === 'admin'){
-    header("Location: ../accueil/admin");
-} elseif ($type === 'user') {
-    header("Location: ../accueil/user");
+if (isset($_SESSION['auth'])){
+    if ($type === 'admin'){
+        header("Location: ../accueil/admin");
+    } elseif ($type === 'user') {
+        header("Location: ../accueil/user");
+    } else {
+        header("Location: ../accueil");
+    }
 }
 
 require("../app/Form.php");

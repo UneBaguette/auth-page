@@ -49,6 +49,27 @@ if ($api === 'POST') {
     }
 }
 
+if ($api === 'PUT') {
+    parse_str(file_get_contents('php://input'), $post_input);
+
+    $email = $db->cleanInput($post_input['mail']);
+	$type = $db->cleanInput($post_input['type']);
+
+    if ($id != null) {
+        if ($db->update($id, $email, $type)){
+            echo $db->message('Successfully updated user!', false, true);
+        } else {
+            if (!$db->checkType($type)){
+                echo $db->message('Wrong type!', true);
+            } else {
+                echo $db->message('User was not successfully updated!', true);
+            }
+        }
+    } else {
+        echo $db->message('User was not found!', true);
+    }
+}
+
 if ($api === 'DELETE') {
     if ($id != null) {
         if ($db->delete($id)) {
