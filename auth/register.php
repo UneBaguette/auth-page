@@ -1,12 +1,14 @@
-<?php 
+<?php
+session_start();
+$type = ($_SESSION['type'] ?? "");
+
+if (!isset($_SESSION['auth']) && !isset($_SESSION['type']) && $_SESSION['type'] !== 'admin'){
+    http_response_code(403);
+    die("You don't have the right to view this page!");
+}
 
 require ("../app/Form.php"); 
 $form = new Form();
-
-// if (!isset($_COOKIE['auth'])) {
-//     http_response_code(403); 
-//     die("You should not have access to this page!");
-// } 
 
 if (isset($_POST["mail"]) && isset($_POST["pass"]) && isset($_POST["passverif"])){
     $email = $_POST["mail"];
