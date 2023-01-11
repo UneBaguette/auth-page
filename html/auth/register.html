@@ -54,7 +54,7 @@
 
             const datas = await res.json();
 
-            return formStatus(datas['success']);
+            return datas['success'] = true ? formStatus(datas['success']) : false;
         }
 
         function formStatus(status){
