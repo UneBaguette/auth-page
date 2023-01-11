@@ -28,7 +28,7 @@ class DB {
      * @param string $dbUser Le nom d'utilisateur de la base de donnée
      * @param string $dbPassword Le mot de passe de la base de donnée, ne pas inclure si aucun mot de passe
      */
-    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = "2341"){
+    public function __construct($dbName = "auth_site", $dbHost = "localhost", $dbUser = "root", $dbPassword = ""){
         $this->dbHost = $dbHost;
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;

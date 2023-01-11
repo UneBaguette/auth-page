@@ -2,7 +2,12 @@
 session_start();
 $type = ($_SESSION['type'] ?? "");
 
-if (!isset($_SESSION['auth']) && !isset($_SESSION['type']) && $_SESSION['type'] !== 'admin'){
+if (isset($_SESSION['auth']) && isset($_SESSION['type'])){
+    if ($type !== 'admin'){
+        http_response_code(403);
+        die("You don't have the right to view this page!");
+    }
+} else {
     http_response_code(403);
     die("You don't have the right to view this page!");
 }
